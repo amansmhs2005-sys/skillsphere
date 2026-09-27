@@ -177,6 +177,7 @@ The Vite dev server proxies `/api/*` to `http://localhost:5000`.
 | POST | `/api/admin/users/<id>/verify` | Admin | Admin-verify (REQ-15 trust component) |
 | POST | `/api/admin/users/<id>/suspend` | Admin | Suspend account |
 | POST | `/api/admin/users/<id>/unsuspend` | Admin | Lift suspension |
+| DELETE | `/api/admin/users/<id>` | Admin | Hard-delete a user (cascades to their skills/sessions/reviews/reports) |
 | GET | `/api/admin/reports?status=` | Admin | List flagged reports |
 | POST | `/api/admin/reports/<id>/resolve` | Admin | Resolve, optionally suspend |
 | GET | `/api/admin/stats` | Admin | Platform activity counts |

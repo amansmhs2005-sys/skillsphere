@@ -85,6 +85,17 @@ export default function Admin() {
     await client.post(`/admin/users/${id}/unsuspend`);
     loadUsers();
   }
+  async function deleteUser(id, name) {
+    if (!window.confirm(`Permanently delete ${name}? This also deletes their skills, sessions, reviews and reports. This cannot be undone.`)) {
+      return;
+    }
+    try {
+      await client.delete(`/admin/users/${id}`);
+      loadUsers();
+    } catch (err) {
+      setError(apiErrorMessage(err));
+    }
+  }
 
   return (
     <div className="container">
@@ -134,6 +145,9 @@ export default function Admin() {
                     Suspend
                   </button>
                 )}
+                <button className="danger" onClick={() => deleteUser(u.user_id, u.name)}>
+                  Delete
+                </button>
               </div>
             </div>
           ))}

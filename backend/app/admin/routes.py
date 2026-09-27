@@ -60,6 +60,26 @@ def unsuspend_user(user_id):
     return jsonify(message="user unsuspended", user=user.to_dict(include_private=True))
 
 
+@admin_bp.delete("/users/<int:user_id>")
+@admin_required
+def delete_user(user_id):
+    """Hard delete. schema.sql has ON DELETE CASCADE on every table that
+    references users (skills, availability, progress, requests_sessions,
+    reviews, reports, notifications, search_history), so this also
+    removes everything tied to the account. There is no undo — consider
+    suspend instead if you just want to stop the account being usable
+    while keeping its session/review history intact."""
+    from flask_jwt_extended import get_jwt_identity
+
+    if user_id == int(get_jwt_identity()):
+        return jsonify(error="you cannot delete your own account while logged in as it"), 400
+
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify(message="user deleted")
+
+
 # ---------------------------------------------------------------
 # REQ-17: review flagged reports
 # ---------------------------------------------------------------
